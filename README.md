@@ -37,24 +37,35 @@ A scalable, real-time messaging platform that enables open group communications 
 
     - For Unix/macOS:
         ```bash
-        python3.11 -m venv env
+        python3 -m venv env
+        ```
+    - For Windows:
+        ```bash
+        python -m venv env
+        ```
+
+3. Activate virtual environment:
+
+    - For Unix/macOS:
+        ```bash
+        source env/bin/activate
         ```
     - For Windows:
         ```bash
         env\Scripts\activate
         ```
 
-3. Install dependencies:
+4. Install dependencies:
     ```bash
     pip install --no-cache-dir -r requirements.txt
     ```
 
-4. Initialize pre-commit hooks:
+5. Initialize pre-commit hooks:
     ```bash
     pre-commit install
     ```
 
-5. Launch Docker services:
+6. Launch Docker services:
     ```bash
     docker-compose up -d
     ```
