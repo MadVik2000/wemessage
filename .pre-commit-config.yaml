@@ -1,0 +1,32 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: black
+        name: black
+        entry: black
+        language: system
+        types: [python]
+
+    -   id: isort
+        name: isort
+        entry: isort
+        language: system
+        types: [python]
+        args: ["--profile", "black"]
+
+    -   id: pycln
+        name: pycln
+        entry: pycln
+        language: system
+        types: [python]
+        args: [--config=pyproject.toml]
+
+    -   id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: [
+            "--rcfile=.pylintrc",
+            "--output-format=colorized"
+        ]
