@@ -30,7 +30,7 @@ A scalable, real-time messaging platform that enables open group communications 
 
 1. Clone the repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/MadVik2000/wemessage
     ```
 
 2. Set up Python virtual environment:
