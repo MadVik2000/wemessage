@@ -22,6 +22,8 @@ class GenerateUserTokenAPI(APIView):
     This API is used to generate user token.
     """
 
+    permission_classes = (AllowAny,)
+
     class InputSerializer(serializers.Serializer):
         """
         This serializer is used to validate the input data.
