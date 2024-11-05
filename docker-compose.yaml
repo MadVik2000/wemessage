@@ -120,9 +120,33 @@ services:
     networks:
       - kafka-network
 
+  wemessage-django:
+    build:
+      context: .
+    volumes:
+      - static:/static
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - broker-1
+      - broker-2
+      - broker-3
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - wemessage-django
+    volumes:
+      - static:/static
 networks:
   kafka-network:
     driver: bridge
 
 volumes:
   postgres_data:
+  static:
