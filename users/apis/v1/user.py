@@ -2,7 +2,7 @@
 This file contains all the APIs related to user model.
 """
 
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -14,7 +14,7 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 
-User = get_user_model()
+from users.services import get_or_create_user
 
 
 class GenerateUserTokenAPI(APIView):
@@ -104,14 +104,19 @@ class CreateUserAPI(APIView):
 
         validated_data = serializer.validated_data
 
-        user, _created = User.objects.get_or_create(
+        success, user = get_or_create_user(
             email=validated_data["email"],
             username=validated_data["username"],
-            defaults={
-                "first_name": validated_data["first_name"],
-                "last_name": validated_data.get("last_name"),
-                "profile_image": validated_data.get("profile_image"),
-            },
+            first_name=validated_data["first_name"],
+            password=validated_data["password"],
+            last_name=validated_data.get("last_name"),
+            profile_image=validated_data.get("profile_image"),
         )
+
+        if not success:
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"errors": user},
+            )
 
         return Response(status=HTTP_201_CREATED, data={"token": user.token})
