@@ -3,7 +3,7 @@
 commit_message=`cat "$1"`
 
 prefixes=("Feature:" "Refactor:" "Fix:" "Hotfix:" "Doc:" "Lint:" "Merge")
-max_length=50
+max_length=75
 
 if [ ${#commit_message} -gt $max_length ]; then
     echo "ERROR: Commit message must not exceed $max_length characters."
