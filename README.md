@@ -28,6 +28,8 @@ A scalable, real-time messaging platform that enables open group communications 
 
 ### Quick Start
 
+**Note:** All the commands below must be run from the base directory of the repository.
+
 1. Clone the repository:
     ```bash
     git clone https://github.com/MadVik2000/wemessage
@@ -63,6 +65,11 @@ A scalable, real-time messaging platform that enables open group communications 
 5. Initialize pre-commit hooks:
     ```bash
     pre-commit install
+    ```
+
+6. Copy commit message checker script to git folder:
+    ```bash
+    cp commit-msg .git/hooks/commit-msg
     ```
 
 6. Launch Docker services:
