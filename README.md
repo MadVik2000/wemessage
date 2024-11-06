@@ -24,6 +24,7 @@ A scalable, real-time messaging platform that enables open group communications 
 
 - Python 3.11 or above
 - Docker & Docker Compose
+- PosgreSQL
 - Git
 
 ### Quick Start
@@ -67,12 +68,35 @@ A scalable, real-time messaging platform that enables open group communications 
     pre-commit install
     ```
 
-6. Copy commit message checker script to git folder:
+6. Create env file
+    ```bash
+    cp .env.example .env
+    ```
+
+    > **Note** Do not forget to populate env values.
+
+7. Copy commit message checker script to git folder:
     ```bash
     cp commit-msg .git/hooks/commit-msg
     ```
 
-6. Launch Docker services:
+9. Start server
+    - For development server
+        ```bash
+        python manage.py runserver 0.0.0.0:8000
+        ```
+
+    - For production ready server
+        ```bash
+        gunicorn --bind 0.0.0.0:8000 webmessage.wsgi
+        ```
+
+    > **Note**: Static files won't be served through gunicorn. Admin interface won't be usable.
+
+### Docker Container
+
+> **Info**: No need to setup any environment or dependencies. Just need .env
+- Spin up Docker containers:
     ```bash
     docker-compose up -d
     ```

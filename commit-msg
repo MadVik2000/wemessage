@@ -5,9 +5,14 @@ commit_message=`cat "$1"`
 prefixes=("Feature:" "Refactor:" "Fix:" "Hotfix:" "Doc:" "Lint:" "Merge")
 max_length=75
 
-if [ ${#commit_message} -gt $max_length ]; then
-    echo "ERROR: Commit message must not exceed $max_length characters."
-    exit 1
+if [[ $commit_message =~ ^Merge ]]; then
+    # If commit message starts with "Merge", bypass the max_length check
+    : 
+else
+    if [ ${#commit_message} -gt $max_length ]; then
+        echo "ERROR: Commit message must not exceed $max_length characters."
+        exit 1
+    fi
 fi
 
 if [ "${commit_message: -1}" == "." ]; then
