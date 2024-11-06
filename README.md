@@ -24,9 +24,12 @@ A scalable, real-time messaging platform that enables open group communications 
 
 - Python 3.11 or above
 - Docker & Docker Compose
+- PosgreSQL
 - Git
 
 ### Quick Start
+
+**Note:** All the commands below must be run from the base directory of the repository.
 
 1. Clone the repository:
     ```bash
@@ -70,12 +73,14 @@ A scalable, real-time messaging platform that enables open group communications 
     cp .env.example .env
     ```
 
-7. Spin up Docker containers:
+    > **Note** Do not forget to populate env values.
+
+7. Copy commit message checker script to git folder:
     ```bash
-    docker-compose up -d
+    cp commit-msg .git/hooks/commit-msg
     ```
 
-8. Start server
+9. Start server
     - For development server
         ```bash
         python manage.py runserver 0.0.0.0:8000

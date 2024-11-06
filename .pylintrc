@@ -18,6 +18,7 @@ disable=
     R0904, # too-many-public-methods
     R0913, # too-many-arguments
     R0914, # too-many-locals
+    R0917, # too-many-positional-arguments
     R1710, # inconsistent-return-statements
 
     # Warning (W)
