@@ -17,16 +17,21 @@ fi
 
 if [ "${commit_message: -1}" == "." ]; then
     echo "ERROR: Commit message must not end with a period."
+    exit 1
 fi
 
 
+valid_prefix=false
 for prefix in "${prefixes[@]}"; do
     if [[ $commit_message =~ ^$prefix ]]; then
+        valid_prefix=true
         break
     fi
 done
 
-if [ $? -ne 0 ]; then
+if [[ $valid_prefix == false ]]; then
     echo "ERROR: Commit message must start with 'Feature:', 'Refactor:', 'Fix:', 'Hotfix:', 'Doc:', 'Lint:' or 'Merge'."
     exit 1
 fi
+
+exit 0
