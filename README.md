@@ -88,7 +88,7 @@ A scalable, real-time messaging platform that enables open group communications 
 
     - For production ready server
         ```bash
-        gunicorn --bind 0.0.0.0:8000 webmessage.wsgi
+        gunicorn --bind 0.0.0.0:8000 wemessage.wsgi
         ```
 
     > **Note**: Static files won't be served through gunicorn. Admin interface won't be usable.

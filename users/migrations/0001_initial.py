@@ -10,6 +10,7 @@ import django.contrib.auth.models
 from django.db import migrations, models
 
 import utils.misc
+import utils.mixins
 import utils.validators
 
 
@@ -132,6 +133,7 @@ class Migration(migrations.Migration):
                 "verbose_name": "User",
                 "verbose_name_plural": "Users",
             },
+            bases=(models.Model, utils.mixins.ModelDiffMixin),
             managers=[
                 ("objects", django.contrib.auth.models.UserManager()),
             ],
