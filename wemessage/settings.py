@@ -110,6 +110,7 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "utils.authentication.JWTAuthentication",
@@ -126,6 +127,48 @@ AUTHENTICATION_BACKENDS = [
     "utils.authentication.CustomModelBackend",
 ]
 
+REDIS_LOCATION = (
+    "redis://"
+    ":"
+    f'{os.environ["REDIS_PASSWORD"]}'
+    "@"
+    f'{os.environ["REDIS_HOST"]}'
+    ":"
+    f'{os.environ["REDIS_PORT"]}'
+    "/0"
+)
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_LOCATION,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "TIMEOUT": 60 * 60 * 2,  # setting a default timeout of 2 hours
+        "KEY_PREFIX": "WM",
+        "KEY_FUNCTION": "utils.redis.custom_redis_key_function",
+    }
+}
+
+if os.environ.get("LOGGING", "False").lower() == "true":
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+            }
+        },
+        "loggers": {
+            "django.db": {
+                "handlers": ["console"],
+                "level": "DEBUG",
+                "propagate": True,
+            }
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

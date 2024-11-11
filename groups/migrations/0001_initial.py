@@ -6,11 +6,11 @@ This file contains migration number 0001 for the groups app.
 
 import autoslug.fields
 import django.db.models.deletion
-import django.db.models.manager
 from django.conf import settings
 from django.db import migrations, models
 
 import utils.misc
+import utils.mixins
 import utils.validators
 
 
@@ -88,9 +88,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["-created_at"],
             },
-            managers=[
-                ("active_objects", django.db.models.manager.Manager()),
-            ],
+            bases=(utils.mixins.ModelDiffMixin, models.Model),
         ),
         migrations.CreateModel(
             name="GroupMessage",
@@ -140,9 +138,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["-created_at"],
             },
-            managers=[
-                ("active_objects", django.db.models.manager.Manager()),
-            ],
+            bases=(utils.mixins.ModelDiffMixin, models.Model),
         ),
         migrations.CreateModel(
             name="GroupMember",
@@ -205,8 +201,6 @@ class Migration(migrations.Migration):
                     )
                 ],
             },
-            managers=[
-                ("active_objects", django.db.models.manager.Manager()),
-            ],
+            bases=(utils.mixins.ModelDiffMixin, models.Model),
         ),
     ]
