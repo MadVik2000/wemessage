@@ -9,10 +9,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from utils.misc import FileRenamer
+from utils.mixins import ModelDiffMixin
 from utils.validators import ExtensionValidator, FileSizeValidator
 
 
-class User(AbstractUser):
+class User(AbstractUser, ModelDiffMixin):
     """
     This model represents user in the system.
     """
