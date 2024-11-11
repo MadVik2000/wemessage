@@ -9,18 +9,16 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from utils.misc import FileRenamer
-from utils.redis import RedisCacheMixin
 from utils.validators import ExtensionValidator, FileSizeValidator
 
 
-class User(AbstractUser, RedisCacheMixin):
+class User(AbstractUser):
     """
     This model represents user in the system.
     """
 
     MAX_FILE_SIZE = 10  # in Mb
     SUPPORTED_FILE_FORMATS = [".jpg", ".jpeg", ".png"]
-    CACHE_KEY_PREFIX = "USR"
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(_("email address"), unique=True)
@@ -62,32 +60,15 @@ class User(AbstractUser, RedisCacheMixin):
         return f"{self.first_name} {self.last_name}".strip()
 
     @property
-    def cache_key_prefix(self):
-        """
-        This property is used to define cache prefix for user model class.
-        """
-        return self.CACHE_KEY_PREFIX
-
-    @property
     def token(self) -> str:
         """
         Generate and retrieve the JWT token for the user.
-
-        The token is first attempted to be retrieved from the cache using the username
-        as the cache key. If not found, a new token is created using the user's UUID,
-        cached, and then returned.
 
         Returns:
             str: The JWT token for the user.
         """
 
-        if data := self.get_cache(key_name=self.username):
-            return data
-
         # importing here to avoid circular import
         from utils.authentication import create_user_jwt_token
 
-        token_data = create_user_jwt_token(user_id=self.uuid)
-        self.set_cache(key_name=self.username, value=token_data)
-
-        return token_data
+        return create_user_jwt_token(user_id=self.uuid)
