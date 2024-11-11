@@ -3,8 +3,9 @@ This file contains all the APIs related to user model.
 """
 
 from django.contrib.auth import authenticate
+from django.utils.functional import empty
 from rest_framework import serializers
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
@@ -14,7 +15,7 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 
-from users.services import get_or_create_user
+from users.services import get_or_create_user, update_user
 
 
 class GenerateUserTokenAPI(APIView):
@@ -122,3 +123,52 @@ class CreateUserAPI(APIView):
             )
 
         return Response(status=HTTP_201_CREATED, data={"token": user.token})
+
+
+class UpdateUserAPI(APIView):
+    """
+    This API is used to update user.
+    Response Codes:
+        200, 400
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    class InputSerializer(serializers.Serializer):
+        """
+        This serializer is used to validate the input data.
+        """
+
+        first_name = serializers.CharField(required=False)
+        last_name = serializers.CharField(required=False)
+        profile_image = serializers.ImageField(required=False)
+        username = serializers.CharField(required=False)
+        email = serializers.EmailField(required=False)
+
+    def post(self, request):
+        """
+        This method is used to update user.
+        """
+
+        serializer = self.InputSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=HTTP_400_BAD_REQUEST, data=serializer.errors)
+
+        validated_data = serializer.validated_data
+
+        success, user = update_user(
+            user=request.user,
+            first_name=validated_data.get("first_name", empty),
+            last_name=validated_data.get("last_name", empty),
+            profile_image=validated_data.get("profile_image", empty),
+            username=validated_data.get("username", empty),
+            email=validated_data.get("email", empty),
+        )
+
+        if not success:
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"errors": user},
+            )
+
+        return Response(status=HTTP_200_OK)
