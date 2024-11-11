@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import ImageField
 from django.utils.functional import empty
 
+from utils.misc import extract_validation_error
+
 User = get_user_model()
 
 
@@ -60,6 +62,6 @@ def update_user(
     try:
         user.save(update_fields=updation_fields.keys())
     except ValidationError as error:
-        return False, str(error)
+        return False, extract_validation_error(error)
 
     return True, user
