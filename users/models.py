@@ -60,9 +60,12 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}".strip()
 
     @property
-    def token(self):
+    def token(self) -> str:
         """
-        This method is used to generate user token.
+        Generate and retrieve the JWT token for the user.
+
+        Returns:
+            str: The JWT token for the user.
         """
 
         # importing here to avoid circular import
