@@ -11,6 +11,7 @@ disable=
     E1101, # no-member
 
     # Refactor (R)
+    R0205, # useless-object-inheritance
     R0801, # duplicate-code
     R0901, # too-many-ancestors
     R0902, # too-many-instance-attributes
@@ -20,6 +21,7 @@ disable=
     R0914, # too-many-locals
     R0917, # too-many-positional-arguments
     R1710, # inconsistent-return-statements
+    R1725, # super-with-arguments
 
     # Warning (W)
     W0106, # expression-not-assigned
