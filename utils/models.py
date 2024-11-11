@@ -4,11 +4,13 @@ This module contains the base models for the project.
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Manager
 
 from utils.managers import ActiveManager
+from utils.mixins import ModelDiffMixin
 
 
-class BaseModel(models.Model):
+class BaseModel(ModelDiffMixin, models.Model):
     """
     Base model for all models
     """
@@ -33,6 +35,7 @@ class BaseModel(models.Model):
 
     LOG_FIELDS = ["created_at", "updated_at", "created_by", "updated_by"]
 
+    objects = Manager()
     active_objects = ActiveManager()
 
     class Meta:
