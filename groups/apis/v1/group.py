@@ -3,9 +3,15 @@ This module contains all the APIs related to group model
 """
 
 from django.utils.functional import empty
-from rest_framework import serializers, status
+from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+)
 from rest_framework.views import APIView
 
 from groups.models import Group
@@ -50,7 +56,7 @@ class CreateGroupAPI(APIView):
         if not serializer.is_valid():
             return Response(
                 data={"errors": serializer.errors},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=HTTP_400_BAD_REQUEST,
             )
 
         validated_data = serializer.validated_data
@@ -64,12 +70,12 @@ class CreateGroupAPI(APIView):
         if not success:
             return Response(
                 data={"errors": group},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=HTTP_400_BAD_REQUEST,
             )
 
         return Response(
             data=self.OutputSerializer(group).data,
-            status=status.HTTP_201_CREATED,
+            status=HTTP_201_CREATED,
         )
 
 
@@ -110,7 +116,7 @@ class UpdateGroupAPI(APIView):
         except Group.DoesNotExist:
             return Response(
                 data={"errors": "Group not found"},
-                status=status.HTTP_404_NOT_FOUND,
+                status=HTTP_404_NOT_FOUND,
             )
 
         serializer = self.InputSerializer(data=request.data)
@@ -118,7 +124,7 @@ class UpdateGroupAPI(APIView):
         if not serializer.is_valid():
             return Response(
                 data={"errors": serializer.errors},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=HTTP_400_BAD_REQUEST,
             )
 
         validated_data = serializer.validated_data
@@ -134,9 +140,9 @@ class UpdateGroupAPI(APIView):
         if not success:
             return Response(
                 data={"errors": group},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=HTTP_400_BAD_REQUEST,
             )
 
         return Response(
-            status=status.HTTP_200_OK,
+            status=HTTP_200_OK,
         )

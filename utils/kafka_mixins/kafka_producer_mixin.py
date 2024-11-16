@@ -73,7 +73,6 @@ class BaseKafkaProducerMixin(ABC):
                 batch_size=self.__batch_size,
                 request_timeout_ms=self.__request_timeout_ms,
             )
-            logger.info(f"Kafka producer initialized successfully: {self.__client_id}")
         except KafkaError as e:
             logger.error(f"Failed to initialize Kafka producer: {str(e)}")
             raise
@@ -124,7 +123,6 @@ class BaseKafkaProducerMixin(ABC):
                 topic=topic, value=value, key=key, partition=partition
             )
             future.get(timeout=3)
-            logger.debug(f"Message sent successfully to {topic}")
         except Exception as e:
             logger.error(f"Failed to send message to {topic}: {str(e)}")
             raise
@@ -163,7 +161,6 @@ class BaseKafkaProducerMixin(ABC):
         """
         self.producer.flush()
         self.producer.close()
-        logger.info(f"Kafka producer closed: {self.__client_id}")
 
 
 class BaseKafkaProducer(BaseKafkaProducerMixin):
