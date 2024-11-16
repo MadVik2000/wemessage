@@ -42,6 +42,7 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 ("is_active", models.BooleanField(default=True)),
                 ("name", models.CharField(max_length=255)),
+                ("tag", models.CharField(max_length=32, unique=True)),
                 (
                     "slug",
                     autoslug.fields.AutoSlugField(
@@ -155,6 +156,7 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 ("is_active", models.BooleanField(default=True)),
+                ("admin", models.BooleanField(default=False)),
                 (
                     "created_by",
                     models.ForeignKey(
