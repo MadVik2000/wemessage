@@ -21,6 +21,7 @@ class Group(BaseModel):
     SUPPORTED_FILE_FORMATS = [".jpg", ".jpeg", ".png"]
 
     name = models.CharField(max_length=255)
+    tag = models.CharField(max_length=32, unique=True)
     slug = AutoSlugField(populate_from="name", unique=True)
     description = models.TextField()
     image = models.ImageField(
@@ -75,6 +76,7 @@ class GroupMember(BaseModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="members"
     )
+    admin = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user_id} - {self.group_id}"

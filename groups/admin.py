@@ -13,21 +13,29 @@ class GroupAdmin(admin.ModelAdmin):
     This class contains all the model admin configurations for group model.
     """
 
-    list_display = ("name", "slug", "description", "is_active")
+    list_display = ("name", "slug", "tag", "description", "is_active")
     fields = (
         "created_by",
         "updated_by",
         "name",
+        "tag",
         "slug",
         "description",
         "is_active",
         "created_at",
         "updated_at",
     )
-    search_fields = ("id", "name", "description")
+    search_fields = ("id", "tag", "name", "description")
     list_filter = ("is_active",)
     list_select_related = ("created_by", "updated_by")
-    readonly_fields = ("created_by", "updated_by", "created_at", "updated_at", "slug")
+    readonly_fields = (
+        "created_by",
+        "updated_by",
+        "created_at",
+        "updated_at",
+        "slug",
+        "tag",
+    )
 
 
 @admin.register(GroupMember)
@@ -36,18 +44,19 @@ class GroupMemberAdmin(admin.ModelAdmin):
     This class contains all the model admin configurations for group member model.
     """
 
-    list_display = ("group", "user", "is_active")
+    list_display = ("group", "user", "admin", "is_active")
     fields = (
         "created_by",
         "updated_by",
         "group",
         "user",
+        "admin",
         "is_active",
         "created_at",
         "updated_at",
     )
     search_fields = ("group__name", "user__username", "user__email")
-    list_filter = ("is_active",)
+    list_filter = ("is_active", "admin")
     list_select_related = ("group", "user", "created_by", "updated_by")
     autocomplete_fields = ("group", "user")
     readonly_fields = ("created_by", "updated_by", "created_at", "updated_at")
@@ -58,6 +67,7 @@ class GroupMemberAdmin(admin.ModelAdmin):
         "updated_at",
         "group",
         "user",
+        "admin",
     )
 
 

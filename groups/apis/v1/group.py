@@ -31,6 +31,7 @@ class CreateGroupAPI(APIView):
         """
 
         name = serializers.CharField()
+        tag = serializers.CharField()
         description = serializers.CharField()
         image = serializers.ImageField(required=False)
 
@@ -62,6 +63,7 @@ class CreateGroupAPI(APIView):
         validated_data = serializer.validated_data
         success, group = create_group(
             name=validated_data["name"],
+            tag=validated_data["tag"],
             description=validated_data["description"],
             image=validated_data.get("image"),
             created_by_id=request.user.uuid,
@@ -92,6 +94,7 @@ class UpdateGroupAPI(APIView):
         """
 
         name = serializers.CharField(required=False)
+        tag = serializers.CharField(required=False)
         description = serializers.CharField(required=False)
         image = serializers.ImageField(required=False)
 
@@ -132,6 +135,7 @@ class UpdateGroupAPI(APIView):
         success, group = update_group(
             group=group,
             name=validated_data.get("name", empty),
+            tag=validated_data.get("tag", empty),
             description=validated_data.get("description", empty),
             image=validated_data.get("image", empty),
             updated_by_id=request.user.uuid,
