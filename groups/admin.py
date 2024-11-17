@@ -13,13 +13,12 @@ class GroupAdmin(admin.ModelAdmin):
     This class contains all the model admin configurations for group model.
     """
 
-    list_display = ("name", "slug", "tag", "description", "is_active")
+    list_display = ("name", "tag", "description", "is_active")
     fields = (
         "created_by",
         "updated_by",
         "name",
         "tag",
-        "slug",
         "description",
         "is_active",
         "created_at",
@@ -28,14 +27,7 @@ class GroupAdmin(admin.ModelAdmin):
     search_fields = ("id", "tag", "name", "description")
     list_filter = ("is_active",)
     list_select_related = ("created_by", "updated_by")
-    readonly_fields = (
-        "created_by",
-        "updated_by",
-        "created_at",
-        "updated_at",
-        "slug",
-        "tag",
-    )
+    readonly_fields = ("created_by", "updated_by", "created_at", "updated_at", "tag")
 
 
 @admin.register(GroupMember)

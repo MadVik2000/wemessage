@@ -14,7 +14,7 @@ CREATE TABLE
             time zone NOT NULL,
             "is_active" boolean NOT NULL,
             "name" varchar(255) NOT NULL,
-            "slug" varchar(50) NOT NULL UNIQUE,
+            "tag" varchar(32) NOT NULL UNIQUE,
             "description" text NOT NULL,
             "image" varchar(100) NULL,
             "created_by_id" uuid NULL,
@@ -53,6 +53,7 @@ CREATE TABLE
         with
             time zone NOT NULL,
             "is_active" boolean NOT NULL,
+            "admin" boolean NOT NULL,
             "created_by_id" uuid NULL,
             "group_id" bigint NOT NULL,
             "updated_by_id" uuid NULL,
@@ -64,7 +65,7 @@ ALTER TABLE "groups_group" ADD CONSTRAINT "groups_group_created_by_id_498c8e85_f
 
 ALTER TABLE "groups_group" ADD CONSTRAINT "groups_group_updated_by_id_57f18485_fk_users_user_uuid" FOREIGN KEY ("updated_by_id") REFERENCES "users_user" ("uuid") DEFERRABLE INITIALLY DEFERRED;
 
-CREATE INDEX "groups_group_slug_93c08f28_like" ON "groups_group" ("slug" varchar_pattern_ops);
+CREATE INDEX "groups_group_tag_bbb8825d_like" ON "groups_group" ("tag" varchar_pattern_ops);
 
 CREATE INDEX "groups_group_created_by_id_498c8e85" ON "groups_group" ("created_by_id");
 
