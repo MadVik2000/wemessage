@@ -12,9 +12,10 @@ from rest_framework.views import APIView
 
 from groups.models import Group, GroupMember
 from utils.kafka_mixins import BaseKafkaProducer
+from utils.redis import RedisCacheMixin
 
 
-class CreateGroupMessageAPI(APIView):
+class CreateGroupMessageAPI(APIView, RedisCacheMixin):
     """
     This API is used to create a group message.
     """
@@ -35,8 +36,15 @@ class CreateGroupMessageAPI(APIView):
         Checks if the user is a member of the group
         """
 
-        Group.active_objects.get(id=group_id)
-        GroupMember.active_objects.get(group_id=group_id, user_id=user_id)
+        if not (group := self.get_cache(group_id, Group)):
+            group = Group.active_objects.get(id=group_id)
+            self.set_cache(group_id, group, Group)
+
+        if not (group_member := self.get_cache(f"{group_id}-{user_id}", GroupMember)):
+            group_member = GroupMember.active_objects.get(
+                group_id=group_id, user_id=user_id
+            )
+            self.set_cache(f"{group_id}-{user_id}", group_member, GroupMember)
 
     def post(self, request):
         """
