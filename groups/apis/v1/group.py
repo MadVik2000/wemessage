@@ -16,6 +16,7 @@ from rest_framework.views import APIView
 
 from groups.models import Group
 from groups.services import create_group, update_group
+from utils.redis import RedisCacheMixin
 
 
 class CreateGroupAPI(APIView):
@@ -81,7 +82,7 @@ class CreateGroupAPI(APIView):
         )
 
 
-class UpdateGroupAPI(APIView):
+class UpdateGroupAPI(APIView, RedisCacheMixin):
     """
     This API is used to update a group
     """
@@ -107,7 +108,11 @@ class UpdateGroupAPI(APIView):
         :rtype: QuerySet
         """
 
-        return Group.active_objects.filter(id=group_id)
+        if not (group := self.get_cache(key_name=str(group_id), model=Group)):
+            group = Group.active_objects.get(id=group_id)
+            self.set_cache(key_name=str(group_id), value=group, model=Group)
+
+        return group
 
     def put(self, request, group_id):
         """
@@ -115,7 +120,7 @@ class UpdateGroupAPI(APIView):
         """
 
         try:
-            group = self.get_queryset(group_id).get()
+            group = self.get_queryset(group_id)
         except Group.DoesNotExist:
             return Response(
                 data={"errors": "Group not found"},

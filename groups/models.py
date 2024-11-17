@@ -2,7 +2,6 @@
 This module contains all the model definitions for the groups app.
 """
 
-from autoslug import AutoSlugField
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -22,7 +21,6 @@ class Group(BaseModel):
 
     name = models.CharField(max_length=255)
     tag = models.CharField(max_length=32, unique=True)
-    slug = AutoSlugField(populate_from="name", unique=True)
     description = models.TextField()
     image = models.ImageField(
         _("group image"),
