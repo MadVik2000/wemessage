@@ -35,6 +35,7 @@ disable=
     W0613, # unused-argument
     W0703, # broad-except
     W0707, # raise-missing-from
+    W0719, # broad-exception-raised
     W1203  # logging-fstring-interpolation
 
 [FORMAT]
