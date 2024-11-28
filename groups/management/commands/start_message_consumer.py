@@ -6,29 +6,39 @@ import logging
 import os
 
 import schedule
-from django.conf import settings
 from django.core.management import BaseCommand
 
 from groups.services import bulk_create_group_messages
+from message_sdk import capture_debezium_messages
 from utils.kafka_mixins.kafka_consumer_mixin import BaseKafkaConsumer
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("default")
 
 consumer = BaseKafkaConsumer(
-    topics=[settings.MESSAGE_CONSUMER_TOPIC],
+    topics=os.environ["KAFKA_TOPICS"].split(","),
     bootstrap_servers=os.environ["KAFKA_SERVERS"].split(","),
 )
 
 
-def poll_server(topic: str = settings.MESSAGE_CONSUMER_TOPIC):
+def poll_server():
     """
     This method is used to poll kafka server.
     """
+
     messages = consumer.consume_messages()
 
     for topic_partition, records in messages.items():
-        if topic_partition.topic != topic:
+
+        topic = topic_partition.topic
+        logger.info(f"Received messages from {topic}")
+        logger.info(records)
+        if topic.startswith("cdc"):
+            for record in records:
+                capture_debezium_messages(record.value)
             continue
+
+        if topic != "message-app":
+            raise Exception(f"Unknown topic {topic}")
 
         success, group_messages = bulk_create_group_messages(
             group_messages=[record.value for record in records]

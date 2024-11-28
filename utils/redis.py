@@ -138,3 +138,13 @@ class RedisCacheMixin:
         return cache.get_many(
             [self.get_model_cache_key(key, model) for key in keys] if model else keys
         )
+
+    def delete_cache(self, key_name: str, model: Optional[Model] = None) -> None:
+        """
+        Delete a cached value for the specified key name.
+
+        Args:
+            key_name: The name of the key whose cached value is to be deleted.
+        """
+
+        cache.delete(self.get_model_cache_key(key_name, model) if model else key_name)
