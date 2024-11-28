@@ -36,15 +36,21 @@ class CreateGroupMessageAPI(APIView, RedisCacheMixin):
         Checks if the user is a member of the group
         """
 
-        if not (group := self.get_cache(group_id, Group)):
+        if not (group := self.get_cache(key_name=str(group_id), model=Group)):
             group = Group.active_objects.get(id=group_id)
-            self.set_cache(group_id, group, Group)
+            self.set_cache(key_name=str(group_id), value=group, model=Group)
 
-        if not (group_member := self.get_cache(f"{group_id}-{user_id}", GroupMember)):
+        if not (
+            group_member := self.get_cache(
+                key_name=f"{group_id}-{user_id}", model=GroupMember
+            )
+        ):
             group_member = GroupMember.active_objects.get(
                 group_id=group_id, user_id=user_id
             )
-            self.set_cache(f"{group_id}-{user_id}", group_member, GroupMember)
+            self.set_cache(
+                key_name=f"{group_id}-{user_id}", value=group_member, model=GroupMember
+            )
 
     def post(self, request):
         """
