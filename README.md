@@ -106,6 +106,11 @@ A scalable, real-time messaging platform that enables open group communications 
     docker-compose up -d
     ```
 
+### Register tables for debezium 
+ ```bash
+ curl -i -X HOST -H "Accept:application/json" -H "Content-Type:application/json" 127.0.0.1:8083/connectors/ --data @debezium-config.json
+ ```
+
 ### Update local environment with GitHub
 
 - Fetch Latest Info from remote
