@@ -17,6 +17,7 @@ disable=
     R0902, # too-many-instance-attributes
     R0903, # too-few-public-methods
     R0904, # too-many-public-methods
+    R0912, # too-many-branches
     R0913, # too-many-arguments
     R0914, # too-many-locals
     R0917, # too-many-positional-arguments
@@ -25,7 +26,9 @@ disable=
 
     # Warning (W)
     W0106, # expression-not-assigned
+    W0212, # protected-access
     W0223, # abstract-method
+    W0231, # super-init-not-called
     W0401, # wildcard-import
     W0511, # fixme
     W0611, # unused-import
