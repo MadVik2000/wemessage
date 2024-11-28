@@ -162,17 +162,40 @@ if os.environ.get("LOGGING", "False").lower() == "true":
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
+        "formatters": {
+            "verbose": {
+                "format": "{asctime} - {levelname} - {message}",
+                "style": "{",
+            },
+            "simple": {
+                "format": "{levelname} - {message}",
+                "style": "{",
+            },
+        },
         "handlers": {
             "console": {
+                "level": "DEBUG",
                 "class": "logging.StreamHandler",
-            }
+                "formatter": "verbose",
+            },
+            "file": {
+                "level": "INFO",
+                "class": "logging.FileHandler",
+                "filename": "project.log",
+                "formatter": "verbose",
+            },
         },
         "loggers": {
             "django.db": {
                 "handlers": ["console"],
                 "level": "DEBUG",
+                "propagate": False,
+            },
+            "default": {
+                "handlers": ["console", "file"],
+                "level": "DEBUG",
                 "propagate": True,
-            }
+            },
         },
     }
 

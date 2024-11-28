@@ -11,7 +11,7 @@ from typing import Any, Callable, Optional
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("default")
 
 
 class BaseKafkaProducerMixin(ABC):
