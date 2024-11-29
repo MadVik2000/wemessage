@@ -13,6 +13,8 @@ from django.utils.timezone import now
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
+from utils.redis import RedisCacheMixin
+
 User = get_user_model()
 
 
@@ -53,7 +55,7 @@ def decode_user_jwt_token(token: str) -> dict | None:
         return None
 
 
-class JWTAuthentication(BaseAuthentication):
+class JWTAuthentication(BaseAuthentication, RedisCacheMixin):
     """
     Custom JWT authentication for DRF
     Extracts the JWT token from the Authorization header
@@ -76,7 +78,10 @@ class JWTAuthentication(BaseAuthentication):
                 raise AuthenticationFailed("Invalid token")
 
             # Get user from payload
-            user = User.objects.get(uuid=payload["user_id"])
+            if not (user := self.get_cache(key_name=payload["user_id"], model=User)):
+                user = User.objects.get(uuid=payload["user_id"])
+                self.set_cache(key_name=payload["user_id"], value=user, model=User)
+
             if not user.is_active:
                 raise AuthenticationFailed("User is inactive")
 

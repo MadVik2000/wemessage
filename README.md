@@ -91,7 +91,12 @@ A scalable, real-time messaging platform that enables open group communications 
         gunicorn --bind 0.0.0.0:8000 wemessage.wsgi
         ```
 
-    > **Note**: Static files won't be served through gunicorn. Admin interface won't be usable.
+        > **Note**: Static files won't be served through gunicorn. Admin interface won't be usable.
+
+10. Start Kafka consumer
+    ```bash
+    python manage.py start_message_consumer
+    ```
 
 ### Docker Container
 
@@ -100,3 +105,29 @@ A scalable, real-time messaging platform that enables open group communications 
     ```bash
     docker-compose up -d
     ```
+
+### Register tables for debezium 
+ ```bash
+ curl -i -X HOST -H "Accept:application/json" -H "Content-Type:application/json" 127.0.0.1:8083/connectors/ --data @debezium-config.json
+ ```
+
+### Update local environment with GitHub
+
+- Fetch Latest Info from remote
+    ```bash
+    git fetch -p
+    ```
+
+- Remove all local branch non-existent on GitHub (Merged)
+    ```bash
+    git branch -a --merged | grep -v '\*' | grep -v 'remotes' | xargs git branch -D
+    ```
+    > **Note**: This command only removed branches that have been merged to current branch
+
+- Remove all local branch non-existent on GitHub (All)
+    ```bash
+    git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D
+    ```
+    > **Note**: Be careful when using this command, as it permanently delete local branches without prompting for confirmation
+
+

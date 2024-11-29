@@ -12,3 +12,6 @@ class GroupsConfig(AppConfig):
 
     default_auto_field = "django.db.models.BigAutoField"
     name = "groups"
+
+    def ready(self) -> None:
+        from . import subs  # noqa

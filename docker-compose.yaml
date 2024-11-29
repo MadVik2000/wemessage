@@ -1,7 +1,8 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: postgres_db
+    container_name: postgres
+    hostname: postgres
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -11,6 +12,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
     networks:
       - wemessage-network
 
@@ -121,6 +126,30 @@ services:
       - controller-3
     networks:
       - wemessage-network
+
+  debezium:
+    image: debezium/connect:3.0.0.Final
+    container_name: debezium
+    restart: always
+    hostname: debezium
+    depends_on:
+      - postgres
+      - broker-1
+      - broker-2
+      - broker-3
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: "broker-1:19092,broker-2:29092,broker-3:39092"
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: debezium_configs
+      OFFSET_STORAGE_TOPIC: debezium_offsets
+      STATUS_STORAGE_TOPIC: debezium_status
+      KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER_SCHEMAS_ENABLE: false
+    networks:
+      - wemessage-network
       
   redis:
     image: redis:latest
@@ -151,6 +180,7 @@ services:
       - broker-1
       - broker-2
       - broker-3
+      - debezium
     networks:
       - wemessage-network
 

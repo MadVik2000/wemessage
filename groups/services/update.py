@@ -16,6 +16,7 @@ from utils.misc import extract_validation_error
 def update_group(
     group: Group,
     name: str = empty,
+    tag: str = empty,
     description: str = empty,
     image: ImageField = empty,
     updated_by_id: Optional[UUID] = None,

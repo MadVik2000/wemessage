@@ -1,0 +1,16 @@
+{
+  "name": "postgres-wemessage-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "database.hostname": "${DATABASE_HOST}",
+    "database.port": "${DATABASE_PORT}",
+    "database.user": "${DATABASE_USER}",
+    "database.password": "${DATABASE_PASSWORD}",
+    "database.dbname": "${DATABASE_NAME}",
+    "database.server.name": "postgres",
+    "table.include.list": "public.groups_group,public.groups_groupmember,public.groups_groupmessage,public.users_user",
+    "topic.prefix": "cdc",
+    "decimal.handling.mode": "string"
+  }
+}
