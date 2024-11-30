@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
+    restart: always
     hostname: postgres
     environment:
       POSTGRES_USER: ${DATABASE_USER}
@@ -11,7 +12,6 @@ services:
       - "${DATABASE_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: always
     command:
       - "postgres"
       - "-c"
@@ -22,6 +22,7 @@ services:
   controller-1:
     image: apache/kafka:latest
     container_name: controller-1
+    restart: always
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: controller
@@ -36,6 +37,7 @@ services:
   controller-2:
     image: apache/kafka:latest
     container_name: controller-2
+    restart: always
     environment:
       KAFKA_NODE_ID: 2
       KAFKA_PROCESS_ROLES: controller
@@ -50,6 +52,7 @@ services:
   controller-3:
     image: apache/kafka:latest
     container_name: controller-3
+    restart: always
     environment:
       KAFKA_NODE_ID: 3
       KAFKA_PROCESS_ROLES: controller
@@ -64,6 +67,7 @@ services:
   broker-1:
     image: apache/kafka:latest
     container_name: broker-1
+    restart: always
     ports:
       - 29092:9092
     environment:
@@ -86,6 +90,7 @@ services:
   broker-2:
     image: apache/kafka:latest
     container_name: broker-2
+    restart: always
     ports:
       - 39092:9092
     environment:
@@ -108,6 +113,7 @@ services:
   broker-3:
     image: apache/kafka:latest
     container_name: broker-3
+    restart: always
     ports:
       - 49092:9092
     environment:
@@ -128,7 +134,7 @@ services:
       - wemessage-network
 
   debezium:
-    image: debezium/connect:3.0.0.Final
+    image: debezium/server:3.0.0.Final
     container_name: debezium
     restart: always
     hostname: debezium
@@ -140,26 +146,24 @@ services:
     ports:
       - "8083:8083"
     environment:
-      BOOTSTRAP_SERVERS: "broker-1:19092,broker-2:29092,broker-3:39092"
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: debezium_configs
-      OFFSET_STORAGE_TOPIC: debezium_offsets
-      STATUS_STORAGE_TOPIC: debezium_status
-      KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      VALUE_CONVERTER_SCHEMAS_ENABLE: false
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+    volumes:
+      - ./application.properties:/debezium/config/application.properties
+      - debezium_data:/data
     networks:
       - wemessage-network
       
   redis:
     image: redis:latest
     container_name: redis
+    restart: always
     ports:
       - "${REDIS_PORT}:6379"
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
-    restart: always
     volumes:
       - redis_data:/data
     networks:
@@ -169,6 +173,7 @@ services:
     build:
       context: .
     container_name: django-server
+    restart: always
     volumes:
       - static:/static
     ports:
@@ -186,6 +191,8 @@ services:
 
   nginx:
     build: ./nginx
+    container_name: nginx
+    restart: always
     ports:
       - "80:80"
     depends_on:
@@ -200,6 +207,7 @@ networks:
     driver: bridge
 
 volumes:
+  debezium_data:
   postgres_data:
   redis_data:
   static:
