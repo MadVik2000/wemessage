@@ -107,7 +107,7 @@ class BaseKafkaProducerMixin(ABC):
         topic: str,
         value: Any,
         key: Any,
-        partition: Optional[int] = None,
+        partition: Optional[Any] = None,
     ) -> None:
         """
         Send a message to Kafka with monitoring

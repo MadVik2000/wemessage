@@ -15,3 +15,4 @@ class GroupsConfig(AppConfig):
 
     def ready(self) -> None:
         from . import subs  # noqa
+        from . import tasks  # noqa

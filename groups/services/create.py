@@ -29,18 +29,19 @@ class GroupMessageData:
     message: str
 
 
-def create_group_admin(
+def create_group_member(
     group_id: int,
     user_id: UUID,
+    is_admin: bool = False,
 ) -> Tuple[bool, str | GroupMember]:
     """
-    This service is used to create a group admin
+    This service is used to create a group member
     """
 
     group_member = GroupMember(
         group_id=group_id,
         user_id=user_id,
-        admin=True,
+        admin=is_admin,
     )
 
     try:
@@ -71,8 +72,8 @@ def create_group(
     )
     try:
         group.save()
-        success, group_member = create_group_admin(
-            group_id=group.id, user_id=created_by_id
+        success, group_member = create_group_member(
+            group_id=group.id, user_id=created_by_id, is_admin=True
         )
         if not success:
             raise ValidationError(group_member)
