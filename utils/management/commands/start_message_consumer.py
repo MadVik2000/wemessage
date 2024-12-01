@@ -8,8 +8,8 @@ import os
 import schedule
 from django.core.management import BaseCommand
 
-from groups.services import bulk_create_group_messages
-from message_sdk import capture_debezium_messages
+from groups.tasks import bulk_create_group_messages
+from message_sdk import capture_cdc_events
 from utils.kafka_mixins.kafka_consumer_mixin import BaseKafkaConsumer
 
 logger = logging.getLogger("default")
@@ -28,24 +28,17 @@ def poll_server():
     messages = consumer.consume_messages()
 
     for topic_partition, records in messages.items():
+        print(f"Received message from topic {topic_partition.topic}")
 
         topic = topic_partition.topic
-        logger.info(f"Received messages from {topic}")
-        logger.info(records)
         if topic.startswith("cdc"):
-            for record in records:
-                capture_debezium_messages(record.value)
+            capture_cdc_events.delay([record.value for record in records])
             continue
 
         if topic != "message-app":
             raise Exception(f"Unknown topic {topic}")
 
-        success, group_messages = bulk_create_group_messages(
-            group_messages=[record.value for record in records]
-        )
-
-        if not success:
-            logger.error(f"Error creating group messages: {group_messages}")
+        bulk_create_group_messages.delay([record.value for record in records])
 
 
 def schedule_polling():
