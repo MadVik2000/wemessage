@@ -98,6 +98,11 @@ A scalable, real-time messaging platform that enables open group communications 
     python manage.py start_message_consumer
     ```
 
+11. Start celery worker
+    ```bash
+    celery -A wemessage worker -l INFO  --pool=solo
+    ```
+
 ### Docker Container
 
 > **Info**: No need to setup any environment or dependencies. Just need .env

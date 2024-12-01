@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from wemessage.celery import app as celery_app  # noqa
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,18 +43,23 @@ ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
 # Application definition
 
-INSTALLED_APPS = [
+SYSTEM_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+]
+
+USER_DEFINED_APPS = [
     "users.apps.UsersConfig",
     "groups.apps.GroupsConfig",
-    "storages",
-    "rest_framework",
+    "utils.apps.UtilsConfig",
 ]
+THIRD_PARTY_APPS = ["storages", "rest_framework", "django_celery_results"]
+
+INSTALLED_APPS = SYSTEM_APPS + USER_DEFINED_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
