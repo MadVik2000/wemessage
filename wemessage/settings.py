@@ -232,14 +232,6 @@ JWT_AUDIENCE = os.environ["JWT_AUDIENCE"]
 JWT_ISSUER = os.environ["JWT_ISSUER"]
 
 
-CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
-CELERY_ACCEPT_CONTENT = ["json", "pickle"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TIMEZONE = "UTC"
-CELERY_RESULT_BACKEND = os.environ["CELERY_RESULT_BACKEND"]
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
