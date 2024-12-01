@@ -8,14 +8,13 @@ from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from rest_framework.views import APIView
 
 from groups.models import Group, GroupMember
 from utils.kafka_mixins import BaseKafkaProducer
-from utils.redis import RedisCacheMixin
+from utils.views import CachingAPIView
 
 
-class CreateGroupMessageAPI(APIView, RedisCacheMixin):
+class CreateGroupMessageAPI(CachingAPIView):
     """
     This API is used to create a group message.
     """
@@ -87,6 +86,7 @@ class CreateGroupMessageAPI(APIView, RedisCacheMixin):
                 "created_at": now().isoformat(),
             },
             key=str(validated_data["group_id"]),
+            partition=f"wm-grp-{validated_data['group_id']}",
         )
 
         return Response(status=HTTP_200_OK, data={"message": "Message sent"})

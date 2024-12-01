@@ -14,11 +14,11 @@ cache_object = RedisCacheMixin()
 
 class UserSubscriber(MessageConsumer):
     """
-    This subscriber is used to capture any creation or updation of a user
+    This subscriber is used to capture any updation of a user
     """
 
     model = User
-    trigger = {"create": True, "update": True}
+    trigger = {"update": True}
 
     @classmethod
     def consume(cls, instance):

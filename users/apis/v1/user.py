@@ -2,7 +2,7 @@
 This file contains all the APIs related to user model.
 """
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.utils.functional import empty
 from rest_framework import serializers
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -16,6 +16,9 @@ from rest_framework.status import (
 from rest_framework.views import APIView
 
 from users.services import get_or_create_user, update_user
+from utils.views import CachingAPIView
+
+User = get_user_model()
 
 
 class GenerateUserTokenAPI(APIView):
@@ -75,7 +78,7 @@ class GenerateUserTokenAPI(APIView):
         )
 
 
-class CreateUserAPI(APIView):
+class CreateUserAPI(CachingAPIView):
     """
     This API is used to create user.
     Response Codes:
@@ -122,10 +125,11 @@ class CreateUserAPI(APIView):
                 data={"errors": user},
             )
 
+        self.set_cache(key_name=str(user.uuid), value=user, model=User)
         return Response(status=HTTP_201_CREATED, data={"token": user.token})
 
 
-class UpdateUserAPI(APIView):
+class UpdateUserAPI(CachingAPIView):
     """
     This API is used to update user.
     Response Codes:
@@ -171,4 +175,5 @@ class UpdateUserAPI(APIView):
                 data={"errors": user},
             )
 
+        self.set_cache(key_name=str(user.uuid), value=user, model=User)
         return Response(status=HTTP_200_OK)

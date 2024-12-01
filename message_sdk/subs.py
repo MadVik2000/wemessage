@@ -8,7 +8,7 @@ from message_sdk.helpers import filter_message
 operation_mapping = {"c": "create", "r": "read", "u": "update", "d": "delete"}
 
 
-def capture_debezium_messages(data, **kwargs):
+def capture_debezium_message(data, **kwargs):
     """
     This function is used to validate data published through debezium
     It further triggers all the consumer functions based on db operations

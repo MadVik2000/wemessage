@@ -11,11 +11,11 @@ cache_object = RedisCacheMixin()
 
 class GroupSubscriber(MessageConsumer):
     """
-    This subscriber is used to capture any creation or updation of a group
+    This subscriber is used to capture any updation of a group
     """
 
     model = Group
-    trigger = {"create": True, "update": True}
+    trigger = {"update": True}
 
     @classmethod
     def consume(cls, instance):
@@ -30,11 +30,11 @@ class GroupSubscriber(MessageConsumer):
 
 class GroupMemberSubscriber(MessageConsumer):
     """
-    This subscriber is used to capture any creation or updation of a group member
+    This subscriber is used to capture any updation of a group member
     """
 
     model = GroupMember
-    trigger = {"create": True, "update": True}
+    trigger = {"update": True}
 
     @classmethod
     def consume(cls, instance):

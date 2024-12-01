@@ -12,14 +12,13 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
 )
-from rest_framework.views import APIView
 
 from groups.models import Group
 from groups.services import create_group, update_group
-from utils.redis import RedisCacheMixin
+from utils.views import CachingAPIView
 
 
-class CreateGroupAPI(APIView):
+class CreateGroupAPI(CachingAPIView):
     """
     This API is used to create a group
     """
@@ -76,13 +75,14 @@ class CreateGroupAPI(APIView):
                 status=HTTP_400_BAD_REQUEST,
             )
 
+        self.set_cache(key_name=str(group.id), value=group, model=Group)
         return Response(
             data=self.OutputSerializer(group).data,
             status=HTTP_201_CREATED,
         )
 
 
-class UpdateGroupAPI(APIView, RedisCacheMixin):
+class UpdateGroupAPI(CachingAPIView):
     """
     This API is used to update a group
     """
@@ -152,6 +152,7 @@ class UpdateGroupAPI(APIView, RedisCacheMixin):
                 status=HTTP_400_BAD_REQUEST,
             )
 
+        self.set_cache(key_name=str(group.id), value=group, model=Group)
         return Response(
             status=HTTP_200_OK,
         )
