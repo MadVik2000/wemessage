@@ -28,9 +28,8 @@ def poll_server():
     messages = consumer.consume_messages()
 
     for topic_partition, records in messages.items():
-        print(f"Received message from topic {topic_partition.topic}")
-
         topic = topic_partition.topic
+
         if topic.startswith("cdc"):
             capture_cdc_events.delay([record.value for record in records])
             continue
