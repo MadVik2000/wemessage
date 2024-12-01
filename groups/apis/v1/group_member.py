@@ -27,7 +27,7 @@ class JoinGroupAPI(CachingAPIView):
             group = Group.active_objects.get(id=group_id)
             self.set_cache(key_name=str(group_id), value=group, model=Group)
 
-        GroupMember.active_objects.get(group_id=group_id, user_id=user_id)
+        return GroupMember.objects.get(group_id=group_id, user_id=user_id)
 
     def get(self, request, group_id):
         """
@@ -35,7 +35,9 @@ class JoinGroupAPI(CachingAPIView):
         """
 
         try:
-            self.validate_request(group_id=group_id, user_id=request.user.uuid)
+            group_member = self.validate_request(
+                group_id=group_id, user_id=request.user.uuid
+            )
         except Group.DoesNotExist:
             return Response(
                 data={"errors": "Group not found"},
@@ -59,6 +61,14 @@ class JoinGroupAPI(CachingAPIView):
 
             return Response(
                 status=HTTP_200_OK, data={"message": "Joined group successfully"}
+            )
+
+        if not group_member.is_active:
+            return Response(
+                data={
+                    "errors": "User is restricted from this group. Please contact group admin"
+                },
+                status=HTTP_400_BAD_REQUEST,
             )
 
         return Response(
