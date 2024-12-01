@@ -86,6 +86,7 @@ class CreateGroupMessageAPI(CachingAPIView):
                 "created_at": now().isoformat(),
             },
             key=str(validated_data["group_id"]),
+            partition=f"wm-grp-{validated_data['group_id']}",
         )
 
         return Response(status=HTTP_200_OK, data={"message": "Message sent"})
